@@ -78,7 +78,7 @@ export const ChatInput = ({
     }
     return {
       ok: false,
-      text: '授权码没有输入或者无效'
+      text: '无效授权码(在设置中输入)'
     }
   }
 
