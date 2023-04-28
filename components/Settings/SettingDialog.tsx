@@ -21,7 +21,7 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
   const { state, dispatch } = useCreateReducer<Settings>({
     initialState: settings,
   });
-  const { dispatch: homeDispatch } = useContext(HomeContext);
+  const { dispatch: homeDispatch, handleAccessCodeChanged } = useContext(HomeContext);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,6 +45,9 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
 
   const handleSave = () => {
     homeDispatch({ field: 'lightMode', value: state.theme });
+    homeDispatch({ field: 'accessCode', value: state.accessCode });
+    handleAccessCodeChanged(state.accessCode);
+    console.log('current state is ', state)
     saveSettings(state);
   };
 
@@ -86,6 +89,19 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               <option value="dark">{t('Dark mode')}</option>
               <option value="light">{t('Light mode')}</option>
             </select>
+
+            <div className="text-sm font-bold mb-2 text-black dark:text-neutral-200">
+              {t('AccessCode')}
+            </div>
+
+            <input
+              className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+              placeholder={t('Input Your AccessCode') || ''}
+              value={state.accessCode}
+              onChange={(event) =>
+                dispatch({ field: 'accessCode', value: event.target.value })
+              }
+            />
 
             <button
               type="button"

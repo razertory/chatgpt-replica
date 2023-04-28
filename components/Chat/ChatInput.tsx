@@ -48,7 +48,7 @@ export const ChatInput = ({
   const { t } = useTranslation('chat');
 
   const {
-    state: { selectedConversation, messageIsStreaming, prompts },
+    state: { selectedConversation, messageIsStreaming, prompts, accessCodeEnabled },
 
     dispatch: homeDispatch,
   } = useContext(HomeContext);
@@ -68,6 +68,19 @@ export const ChatInput = ({
   const filteredPrompts = prompts.filter((prompt) =>
     prompt.name.toLowerCase().includes(promptInputValue.toLowerCase()),
   );
+
+  const accessState = () => {
+    if (accessCodeEnabled) {
+      return {
+        ok: true,
+        text: "输入内容或者输入 / (斜杠) 唤起提示词"
+      }
+    }
+    return {
+      ok: false,
+      text: '授权码没有输入或者无效'
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -312,6 +325,7 @@ export const ChatInput = ({
           )}
 
           <textarea
+            readOnly={!accessState().ok}
             ref={textareaRef}
             className="m-0 w-full resize-none border-0 bg-transparent p-0 py-2 pr-8 pl-10 text-black dark:bg-transparent dark:text-white md:py-3 md:pl-10"
             style={{
@@ -325,7 +339,7 @@ export const ChatInput = ({
               }`,
             }}
             placeholder={
-              t('Type a message or type "/" to select a prompt...') || ''
+              t(accessState().text) || ''
             }
             value={content}
             rows={1}

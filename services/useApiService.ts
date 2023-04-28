@@ -6,6 +6,10 @@ export interface GetModelsRequestProps {
   key: string;
 }
 
+export interface CheckAccesssProps {
+  accessCode: string | null;
+}
+
 const useApiService = () => {
   const fetchService = useFetch();
 
@@ -38,8 +42,22 @@ const useApiService = () => {
     [fetchService],
   );
 
+  const checkAccessCode = useCallback(
+    (params: CheckAccesssProps, signal?: AbortSignal) => {
+      return fetchService.post<boolean>(`/api/access`, {
+        body: { accessCode: params.accessCode },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal,
+      });
+    },
+    [fetchService],
+  );
+
   return {
     getModels,
+    checkAccessCode,
   };
 };
 

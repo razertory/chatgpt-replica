@@ -53,7 +53,7 @@ const Home = ({
   defaultModelId,
 }: Props) => {
   const { t } = useTranslation('chat');
-  const { getModels } = useApiService();
+  const { getModels, checkAccessCode } = useApiService();
   const { getModelsError } = useErrorService();
   const [initialRender, setInitialRender] = useState<boolean>(true);
 
@@ -75,6 +75,21 @@ const Home = ({
   } = contextValue;
 
   const stopConversationRef = useRef<boolean>(false);
+
+  const accessQueryResult = useQuery(['CheckAccessCode'], () => {
+    console.log('call accessQueryResult')
+    const { accessCode } = JSON.parse(localStorage.getItem("settings") as string);
+    return checkAccessCode({ accessCode: accessCode });
+  });
+
+  const resp = accessQueryResult.data
+
+  useEffect(() => {
+    if (resp == undefined) {
+      return
+    }
+    dispatch({ field: 'accessCodeEnabled', value: resp });
+  }, [resp]);
 
   const { data, error, refetch } = useQuery(
     ['GetModels', apiKey, serverSideApiKeyIsSet],
@@ -98,8 +113,13 @@ const Home = ({
   useEffect(() => {
     dispatch({ field: 'modelError', value: getModelsError(error) });
   }, [dispatch, error, getModelsError]);
-
   // FETCH MODELS ----------------------------------------------
+
+  const handleAccessCodeChanged = (code: string) => {
+    checkAccessCode({ accessCode: code }).then(ok => {
+      dispatch({ field: 'accessCodeEnabled', value: ok });
+    })
+  }
 
   const handleSelectConversation = (conversation: Conversation) => {
     dispatch({
@@ -226,7 +246,6 @@ const Home = ({
   };
 
   // EFFECTS  --------------------------------------------
-
   useEffect(() => {
     if (window.innerWidth < 640) {
       dispatch({ field: 'showChatbar', value: false });
@@ -357,6 +376,7 @@ const Home = ({
         handleUpdateFolder,
         handleSelectConversation,
         handleUpdateConversation,
+        handleAccessCodeChanged,
       }}
     >
       <Head>
