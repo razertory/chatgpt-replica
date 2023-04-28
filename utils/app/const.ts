@@ -21,4 +21,4 @@ export const AZURE_DEPLOYMENT_ID =
   process.env.AZURE_DEPLOYMENT_ID || '';
 
   export const OPENAI_API_KEY =
-  process.env.OPENAI_API_KEY || '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';
+  process.env.OPENAI_API_KEY || '';

@@ -45,7 +45,6 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
 
   const handleSave = () => {
     homeDispatch({ field: 'lightMode', value: state.theme });
-    homeDispatch({ field: 'accessCode', value: state.accessCode });
     handleAccessCodeChanged(state.accessCode);
     console.log('current state is ', state)
     saveSettings(state);
