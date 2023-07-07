@@ -1,6 +1,6 @@
 export const DEFAULT_SYSTEM_PROMPT =
   process.env.NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT ||
-  "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.";
+  "你是一个国产的人工智能助手";
 
 export const OPENAI_API_HOST =
   process.env.OPENAI_API_HOST || 'https://openai-micius-1.qunhegusuapi.xyz';
